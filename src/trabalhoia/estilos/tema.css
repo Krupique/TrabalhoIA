@@ -1,0 +1,38 @@
+/* 
+    Created on : 07/03/2019, 21:56:35
+    Author     : Henrique K. Secchi
+*/
+
+#hbox {
+    -fx-background-color: #202730
+}
+
+#panealgoritmos, #panecasosteste, #panemetodo {
+    -fx-background-color: #414952;
+    -fx-border-color: #de4726;
+    -fx-border-radius: 5px;
+}
+
+#anchorpane {
+    -fx-background-color: #303841
+}
+
+#gridpane {
+    -fx-border-color: #de4726
+}
+
+#btAbrir, #btOrdenar, #btEmbaralhar, #btBuscarSolucao {
+    -fx-background-color: #ff7045;
+}
+
+.jfx-radio-button {
+    -jfx-selected-color: #ff7045;
+}
+
+.jfx-progress-bar > .bar {
+    -fx-background-color: #ff7045;
+}
+
+Pane{
+    -fx-border-color: black;
+}
