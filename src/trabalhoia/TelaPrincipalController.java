@@ -12,9 +12,14 @@ import java.io.File;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +28,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import trabalhoia.estrutura.Algoritmos;
 
 /**
  *
@@ -86,18 +94,54 @@ public class TelaPrincipalController implements Initializable {
     private JFXRadioButton rdautomatico;
     
     private Image imgPrincipal;
+    private Algoritmos algoritmos;
+    private static int bandeira;
+    @FXML
+    private ImageView imgpre1;
+    @FXML
+    private ImageView imgpre2;
+    @FXML
+    private ImageView imgpre3;
+    @FXML
+    private ImageView imgpre4;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         anchorpane.getStylesheets().add("trabalhoia/estilos/tema.css");
-        
+        bandeira = 9;
+        iniciarImagens();
         rdCasos(false, false, false, true);
         rdMetodo(true, false);
         exibirProgress(false);
+        
+        imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
+        algoritmos = new Algoritmos(imgPrincipal, bandeira);
+        print();
     }    
+    
+    public void iniciarImagens()
+    {
+        Image img = new Image("trabalhoia/recursos/namorada.png");
+        imgpre1.setImage(img);
+        
+        img = new Image("trabalhoia/recursos/numeros.png");
+        imgpre2.setImage(img);
+        
+        img = new Image("trabalhoia/recursos/eu.png");
+        imgpre3.setImage(img);
+        
+        img = new Image("trabalhoia/recursos/flamengo.png");
+        imgpre4.setImage(img);
+    }
 
     @FXML
     private void evtAbrirImagem(ActionEvent event) {
+        abrirImagem();
+        
+    }
+    
+    private void abrirImagem()
+    {
         Properties prop = System.getProperties();
         FileChooser fc = new FileChooser();
         
@@ -109,17 +153,60 @@ public class TelaPrincipalController implements Initializable {
         File arq = fc.showOpenDialog(null);
         if(arq != null)
         {
-            imgPrincipal = new Image(arq.toURI().toString());
+            int larg, alt;
+            larg = (int)new Image(arq.toURI().toString()).getWidth();
+            alt = (int)new Image(arq.toURI().toString()).getHeight();
             
+            if(larg == alt)
+            {
+                larg %= 3;
+                alt %= 3;
+                
+                if(larg == 0 && alt == 0)
+                {
+                    imgPrincipal = new Image(arq.toURI().toString());
+                    algoritmos = new Algoritmos(imgPrincipal, bandeira);
+                    print();
+                }
+                else{
+                    Alert a = new Alert(Alert.AlertType.ERROR, "Imagem inválida frango!\nAlgum dos lados da imagem não é múltiplo de 3!\nCertifique-se de abrir uma imagem quadrada e de tamanho múltiplo de 3!", ButtonType.OK);
+                    a.showAndWait();
+                }
+                
+            }
+            else{
+                Alert a = new Alert(Alert.AlertType.ERROR, "Imagem inválida frango!\nA imagem que você está tentando abrir não é quadrada!\nCertifique-se de abrir uma imagem quadrada e de tamanho múltiplo de 3!", ButtonType.OK);
+                a.showAndWait();
+            }
         }
     }
 
     @FXML
     private void evtOrdenar(ActionEvent event) {
+        algoritmos.ordenar();
+        print();
+        
     }
 
     @FXML
     private void evtEmbaralhar(ActionEvent event) {
+        algoritmos.embaralhar();
+        print();
+    }
+    
+    private void print()
+    {
+        Image[] imgs = algoritmos.getImgs();
+        img1.setImage(imgs[0]);
+        img2.setImage(imgs[1]);
+        img3.setImage(imgs[2]);
+        img4.setImage(imgs[3]);
+        img5.setImage(imgs[4]);
+        img6.setImage(imgs[5]);
+        img7.setImage(imgs[6]);
+        img8.setImage(imgs[7]);
+        img9.setImage(imgs[8]);
+        
     }
 
     @FXML
@@ -229,5 +316,75 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtClickImg9(MouseEvent event) {
         System.out.println("teste9");
+    }
+
+    @FXML
+    private void evtPre1(MouseEvent event) {
+        imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
+        algoritmos = new Algoritmos(imgPrincipal, bandeira);
+        print();
+    }
+
+    @FXML
+    private void evtPre2(MouseEvent event) {
+        imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
+        algoritmos = new Algoritmos(imgPrincipal, bandeira);
+        print();
+    }
+
+    @FXML
+    private void evtPre3(MouseEvent event) {
+        imgPrincipal = new Image("trabalhoia/recursos/eu.png");
+        algoritmos = new Algoritmos(imgPrincipal, bandeira);
+        print();
+    }
+
+    @FXML
+    private void evtPre4(MouseEvent event) {
+        imgPrincipal = new Image("trabalhoia/recursos/flamengo.png");
+        algoritmos = new Algoritmos(imgPrincipal, bandeira);
+        print();
+    }
+
+    @FXML
+    private void evtOpen(ActionEvent event) {
+        abrirImagem();
+    }
+
+    @FXML
+    private void evtClose(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void evtBandeira(ActionEvent event) {
+        try
+        {
+            Stage stage = new Stage();
+            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("TelaBandeira.fxml")));
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
+            bandeira = TelaBandeiraController.getBandeira();
+            algoritmos = new Algoritmos(imgPrincipal, bandeira);
+            print();
+        }catch(Exception er){
+            Alert a = new Alert(Alert.AlertType.ERROR, "Erro ao abrir tela bandeira! " + er.getMessage(), ButtonType.OK);
+            a.showAndWait();
+        }
+    }
+
+    @FXML
+    private void evtComoJogar(ActionEvent event) {
+    }
+
+    @FXML
+    private void evtSobre(ActionEvent event) {
+    }
+
+    public static int getBandeira() {
+        return bandeira;
     }
 }

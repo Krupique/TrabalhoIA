@@ -4,7 +4,9 @@
 */
 
 #hbox {
-    -fx-background-color: #202730
+    -fx-background-color: #202730;
+    -fx-border-color:  #414952 #202730 #202730 #202730;
+    -fx-border-width: 2;
 }
 
 #panealgoritmos, #panecasosteste, #panemetodo {
@@ -14,11 +16,11 @@
 }
 
 #anchorpane {
-    -fx-background-color: #303841
+    -fx-background-color: #303841;
 }
 
 #gridpane {
-    -fx-border-color: #de4726
+    -fx-border-color: #de4726;
 }
 
 #btAbrir, #btOrdenar, #btEmbaralhar, #btBuscarSolucao {
@@ -33,6 +35,29 @@
     -fx-background-color: #ff7045;
 }
 
-Pane{
-    -fx-border-color: black;
+/*Botões da Tela Bandeira*/
+.jfx-button
+{
+    -fx-background-color: #636B74;
+}
+
+#btAplicar, #btCancelar
+{
+    -fx-background-color: #ff7045;
+}
+
+/*Parte do Menu bar*/
+.menu-bar{
+  -fx-background-color: #202730;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+}
+
+.context-menu
+{
+    -fx-background-color: #56555B;   
 }

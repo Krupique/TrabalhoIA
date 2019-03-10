@@ -13,11 +13,15 @@ import javafx.scene.image.Image;
  */
 public class Imagem {
     private Image img;
-    private int id;
+    private int id; //Posição correta da imagem
+    private boolean flag; //Se é a imagem que está visível ou não.
+    private int pos;
 
-    public Imagem(Image img, int id) {
+    public Imagem(Image img, int id, boolean flag) {
         this.img = img;
         this.id = id;
+        this.flag = flag;
+        this.pos = id;
     }
 
     public Image getImg() {
@@ -34,5 +38,21 @@ public class Imagem {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 }
