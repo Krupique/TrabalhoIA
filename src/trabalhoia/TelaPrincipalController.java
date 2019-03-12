@@ -114,17 +114,17 @@ public class TelaPrincipalController implements Initializable {
         rdMetodo(true, false);
         exibirProgress(false);
         
-        imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
+        imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
     }    
     
     public void iniciarImagens()
     {
-        Image img = new Image("trabalhoia/recursos/namorada.png");
+        Image img = new Image("trabalhoia/recursos/numeros.png");
         imgpre1.setImage(img);
         
-        img = new Image("trabalhoia/recursos/numeros.png");
+        img = new Image("trabalhoia/recursos/namorada.png");
         imgpre2.setImage(img);
         
         img = new Image("trabalhoia/recursos/eu.png");
@@ -208,6 +208,14 @@ public class TelaPrincipalController implements Initializable {
         img9.setImage(imgs[8]);
         
     }
+    
+    private void printMec(int pos, int bandeira)
+    {
+        Image[] imgs = algoritmos.getImgs();
+        bandeira = algoritmos.getBandeira();
+        
+        
+    }
 
     @FXML
     private void evtCaso1(ActionEvent event) {
@@ -276,58 +284,121 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtClickImg1(MouseEvent event) {
         System.out.println("teste1");
+        if(algoritmos.movimentar(1))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg2(MouseEvent event) {
         System.out.println("teste2");
+        if(algoritmos.movimentar(2))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg3(MouseEvent event) {
         System.out.println("teste3");
+        if(algoritmos.movimentar(3))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg4(MouseEvent event) {
         System.out.println("teste4");
+        if(algoritmos.movimentar(4))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg5(MouseEvent event) {
         System.out.println("teste5");
+        if(algoritmos.movimentar(5))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg6(MouseEvent event) {
         System.out.println("teste6");
+        if(algoritmos.movimentar(6))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg7(MouseEvent event) {
         System.out.println("teste7");
+        if(algoritmos.movimentar(7))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg8(MouseEvent event) {
         System.out.println("teste8");
+        if(algoritmos.movimentar(8))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtClickImg9(MouseEvent event) {
         System.out.println("teste9");
+        if(algoritmos.movimentar(9))
+            print();
+        else
+        {
+            Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void evtPre1(MouseEvent event) {
-        imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
+        imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
     }
 
     @FXML
     private void evtPre2(MouseEvent event) {
-        imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
+        imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
     }

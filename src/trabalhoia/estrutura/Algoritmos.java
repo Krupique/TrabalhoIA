@@ -7,7 +7,6 @@ package trabalhoia.estrutura;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import javafx.collections.FXCollections;
 import javafx.scene.image.Image;
 import trabalhoia.utilidades.Divisor;
 
@@ -16,7 +15,8 @@ import trabalhoia.utilidades.Divisor;
  */
 public class Algoritmos {
     private Image imgPrincipal;
-    private Imagem[] imgs;
+    private Imagem[] imgs; //Vetor com todas as imagens (imagem, id, pos correta, flag)
+    private int bandeira; //Indica qual é a posição nula (sem imagem).
     
     public Algoritmos(Image img, int flag)
     {
@@ -35,8 +35,9 @@ public class Algoritmos {
         imgs[7] = new Imagem(aux[5], 8, true);
         imgs[8] = new Imagem(aux[8], 9, true);
         
-        imgs[flag - 1].setFlag(false);
-        imgs[flag - 1].setImg(null);
+        bandeira = flag - 1;
+        imgs[bandeira].setFlag(false);
+        imgs[bandeira].setImg(null);
     }
 
     public Image getImgPrincipal() {
@@ -62,7 +63,7 @@ public class Algoritmos {
         return imgs[pos].getImg();
     }
     
-    
+    //Embaralhar do jeito que o parkour mencionou.
     public Image[] embaralhar()
     {
         ArrayList<Imagem> array = new ArrayList<Imagem>();
@@ -77,6 +78,13 @@ public class Algoritmos {
             imgs[i] = array.get(i);
             vet[i] = imgs[i].getImg();
         }
+        
+        int i = 0;
+        if(i < 9 && imgs[i].getFlag())
+            i++;
+        
+        bandeira = i;
+        System.out.println("BANDEIRA: " + bandeira);
         
         return vet;
     }
@@ -94,6 +102,81 @@ public class Algoritmos {
             vet[i] = imgs[i].getImg();
         }
         
+        int i = 0;
+        if(i < 9 && imgs[i].getFlag())
+            i++;
+        
+        bandeira = i;
+        
         return vet;
+    }
+    
+    public int getBandeira()
+    {
+        return bandeira;
+    }
+    
+    public boolean movimentar(int pos)
+    {
+        System.out.println("Bandeira: " + bandeira + " Pos: " + pos);
+        if(isPossible(--pos))
+        {
+            Imagem temp = imgs[bandeira];
+            imgs[bandeira] = imgs[pos];
+            imgs[pos] = temp;
+            bandeira = pos;
+            return true;
+        }
+        else 
+            return false;
+    }
+    
+    private boolean isPossible(int pos)
+    {
+        boolean flag = false;
+        switch(pos)
+        {
+            case 0:
+                flag = bandeira == 1 || bandeira == 3 ? true : false;
+            break;
+            
+            case 1:
+                flag = bandeira == 0 || bandeira == 2 || bandeira == 4 ? true : false;
+            break;
+            
+            case 2:
+                flag = bandeira == 1 || bandeira == 5 ? true : false;
+            break;
+            
+            case 3:
+                flag = bandeira == 0 || bandeira == 4 || bandeira == 6 ? true: false;
+            break;
+            
+            case 4:
+                
+                flag = bandeira == 1 || bandeira == 3 || bandeira == 5 || bandeira == 7 ? true : false;
+            break;
+            
+            case 5:
+                flag = bandeira == 2 || bandeira == 4 || bandeira == 8 ? true : false;
+            break;
+            
+            case 6:
+                flag = bandeira == 3 || bandeira == 7 ? true : false;
+            break;
+            
+            case 7:
+                
+                flag = bandeira == 4 || bandeira == 6 || bandeira == 8 ? true : false;
+            break;
+            
+            case 8:
+                flag = bandeira == 5 || bandeira == 7 ? true : false;
+            break;
+            
+            default:
+            break;
+        }
+        return flag;
     }
 }

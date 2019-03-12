@@ -47,6 +47,11 @@ public class Imagem {
     public void setFlag(boolean flag) {
         this.flag = flag;
     }
+    
+    public boolean getFlag()
+    {
+        return flag;
+    }
 
     public int getPos() {
         return pos;
