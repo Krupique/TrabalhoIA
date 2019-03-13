@@ -241,6 +241,8 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtBuscarSolucao(ActionEvent event) {
         exibirProgress(true);
+        /*int[] test = {8,7,6,5,4,3,2,1,0};
+        algoritmos.setEstado(test);*/
         
         if(algoritmos.buscaProfundidade())
         {

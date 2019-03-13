@@ -118,7 +118,7 @@
                   </JFXButton>
                </children>
             </HBox>
-            <AnchorPane fx:id="panealgoritmos" layoutX="52.0" layoutY="90.0" prefHeight="195.0" prefWidth="330.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="140.0">
+            <AnchorPane fx:id="panealgoritmos" layoutX="52.0" layoutY="90.0" prefHeight="105.0" prefWidth="330.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="140.0">
                <children>
                   <Label layoutX="14.0" layoutY="14.0" text="Selecione o Algoritmo" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <font>
@@ -130,29 +130,14 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXRadioButton>
-                  <JFXRadioButton layoutX="14.0" layoutY="66.0" text="Busca 2" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="67.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </JFXRadioButton>
-                  <JFXRadioButton layoutX="10.0" layoutY="100.0" text="Busca 3" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="99.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </JFXRadioButton>
-                  <JFXRadioButton layoutY="133.0" text="Busca 4" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="131.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </JFXRadioButton>
-                  <JFXRadioButton layoutX="10.0" layoutY="169.0" text="Busca 5" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="163.0">
+                  <JFXRadioButton layoutX="14.0" layoutY="66.0" text="Busca Heusística" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="67.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXRadioButton>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="panecasosteste" layoutX="14.0" layoutY="255.0" prefHeight="70.0" prefWidth="330.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="345.0">
+            <AnchorPane fx:id="panecasosteste" layoutX="14.0" layoutY="255.0" prefHeight="70.0" prefWidth="330.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="255.0">
                <children>
                   <Label layoutX="14.0" layoutY="14.0" text="Casos teste pré-definidos" textFill="WHITE" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <font>

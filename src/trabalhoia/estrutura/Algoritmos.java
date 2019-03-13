@@ -20,6 +20,7 @@ public class Algoritmos {
     private Pilha pilha;
     private ArrayList<Integer> array;
     private Estados estados;
+    private int profundidade;
     
     public Algoritmos(Image img, int flag)
     {
@@ -306,26 +307,6 @@ public class Algoritmos {
         return i == 9;
     }
     
-    public boolean buscaProfundidade()
-    {
-        /*
-            A idéia desta busca é pegar o primeiro nó na sequência e ir buscando.
-            Se chegar no final e não for o desejado, retrocede uma etapa (backtracking)
-            e pega o segundo caminho. Vai retrocedendo até achar o resultado procurado.
-        */
-        
-        pilha = new Pilha();
-        int bandeira = this.bandeira;
-        estados = new Estados();
-        
-        Pilha partida = new Pilha();
-        partida = pegarVizinhos(partida, bandeira);
-        
-        boolean res = dfs(partida.pop());
-        this.bandeira = getBandeira();
-        return res;
-    }
-
     private int[] getEstado()
     {
         int[] aux = new int[9];
@@ -335,6 +316,7 @@ public class Algoritmos {
         return aux;
     }
     
+    //Arrumar essa função
     private void setEstado(int[] estado)
     {
         Imagem temp;
@@ -350,10 +332,56 @@ public class Algoritmos {
         }
     }
     
+    public boolean buscaProfundidade()
+    {
+        /*
+            A idéia desta busca é pegar o primeiro nó na sequência e ir buscando.
+            Se chegar no final e não for o desejado, retrocede uma etapa (backtracking)
+            e pega o segundo caminho. Vai retrocedendo até achar o resultado procurado.
+        */
+        
+        pilha = new Pilha();
+        //estados = new Estados();
+        profundidade = 0;
+        
+        pilha = pegarVizinhos(pilha, bandeira);
+        boolean res = dfs(pilha.pop(), profundidade);
+        return res;
+    }
+    
     
     //Não to conseguindo fazer a busca em profundidade dessa porra.
     //Ta perdendo as pregas, digo referências.
-    private boolean dfs(int rota) {
+    //Arrumar o setEstado e testar essa função.
+    private boolean dfs(int bandeira, int profundidade)
+    {
+        System.out.println("Prof: " + profundidade);
+        if(validarPecas())
+            return true;
+        
+        Pilha p = new Pilha();
+        p = pegarVizinhos(p, bandeira);
+        
+        while(!p.isEmpty())
+        {
+            int rota = p.pop();
+            int[] estado = getEstado();
+            mov(rota);
+            this.bandeira = rota;
+            
+            if(profundidade < 15)
+            {
+                if(dfs(rota, ++profundidade))
+                    return true;
+            }
+            setEstado(estado);
+        }
+        return false;
+    }
+    
+    /*
+    @Deprecated
+    private boolean oldDfs(int rota) {
         if(validarPecas())
             return true;
         
@@ -384,6 +412,6 @@ public class Algoritmos {
             return dfs(rota);
         }
         return false;
-    }
+    }*/
     
 }
