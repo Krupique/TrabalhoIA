@@ -17,6 +17,9 @@ public class Algoritmos {
     private Image imgPrincipal;
     private Imagem[] imgs; //Vetor com todas as imagens (imagem, id, pos correta, flag)
     private int bandeira; //Indica qual é a posição nula (sem imagem).
+    private Pilha pilha;
+    private ArrayList<Integer> array;
+    private Estados estados;
     
     public Algoritmos(Image img, int flag)
     {
@@ -25,15 +28,15 @@ public class Algoritmos {
         
         Image[] aux = Divisor.converter(img);
         //Adicionando as imagens cruas na classe Imagem(Contem mais detalhes sobre a imagem).
-        imgs[0] = new Imagem(aux[0], 1, true);
-        imgs[1] = new Imagem(aux[3], 2, true);
-        imgs[2] = new Imagem(aux[6], 3, true);
-        imgs[3] = new Imagem(aux[1], 4, true);
-        imgs[4] = new Imagem(aux[4], 5, true);
-        imgs[5] = new Imagem(aux[7], 6, true);
-        imgs[6] = new Imagem(aux[2], 7, true);
-        imgs[7] = new Imagem(aux[5], 8, true);
-        imgs[8] = new Imagem(aux[8], 9, true);
+        imgs[0] = new Imagem(aux[0], 0, true);
+        imgs[1] = new Imagem(aux[3], 1, true);
+        imgs[2] = new Imagem(aux[6], 2, true);
+        imgs[3] = new Imagem(aux[1], 3, true);
+        imgs[4] = new Imagem(aux[4], 4, true);
+        imgs[5] = new Imagem(aux[7], 5, true);
+        imgs[6] = new Imagem(aux[2], 6, true);
+        imgs[7] = new Imagem(aux[5], 7, true);
+        imgs[8] = new Imagem(aux[8], 8, true);
         
         bandeira = flag - 1;
         imgs[bandeira].setFlag(false);
@@ -77,13 +80,11 @@ public class Algoritmos {
         {
             imgs[i] = array.get(i);
             vet[i] = imgs[i].getImg();
+            
+            if(!imgs[i].getFlag())
+                bandeira = i;
         }
         
-        int i = 0;
-        if(i < 9 && imgs[i].getFlag())
-            i++;
-        
-        bandeira = i;
         System.out.println("BANDEIRA: " + bandeira);
         
         return vet;
@@ -98,28 +99,32 @@ public class Algoritmos {
         Image[] vet = new Image[9];
         for (int i = 0; i < 9; i++)
         {
-            imgs[temp.get(i).getId() - 1] = temp.get(i);
+            imgs[temp.get(i).getId()] = temp.get(i);
             vet[i] = imgs[i].getImg();
+            
+            if(!imgs[i].getFlag())
+                bandeira = i;
         }
-        
-        int i = 0;
-        if(i < 9 && imgs[i].getFlag())
-            i++;
-        
-        bandeira = i;
         
         return vet;
     }
     
     public int getBandeira()
     {
-        return bandeira;
+        int i = 0;
+        while(i < 9 && imgs[i].getFlag())
+            i++;
+        return i;
     }
     
     public boolean movimentar(int pos)
     {
-        System.out.println("Bandeira: " + bandeira + " Pos: " + pos);
-        if(isPossible(--pos))
+        return mov(--pos);
+    }
+    
+    private boolean mov(int pos)
+    {
+        if(isPossible(pos))
         {
             Imagem temp = imgs[bandeira];
             imgs[bandeira] = imgs[pos];
@@ -153,7 +158,6 @@ public class Algoritmos {
             break;
             
             case 4:
-                
                 flag = bandeira == 1 || bandeira == 3 || bandeira == 5 || bandeira == 7 ? true : false;
             break;
             
@@ -166,7 +170,6 @@ public class Algoritmos {
             break;
             
             case 7:
-                
                 flag = bandeira == 4 || bandeira == 6 || bandeira == 8 ? true : false;
             break;
             
@@ -179,4 +182,192 @@ public class Algoritmos {
         }
         return flag;
     }
+    
+    //Ta um saco essa função, eu sei. Mas eu não to com vontade de pensar em uma solução para calcular a distância de maneira automática.
+    private int calcularDistancia(int id, int posAtual)
+    {
+        int dist = -1;
+        switch(id)
+        {
+            case 0:
+                dist =  posAtual == 0 ? 0 :
+                        posAtual == 1 || posAtual == 3 ? 1 : 
+                        posAtual == 2 || posAtual == 4 || posAtual == 6 ? 2 :
+                        posAtual == 5 || posAtual == 7 ? 3 : 4; /*8*/
+            break;
+            
+            case 1:
+                dist =  posAtual == 1 ? 0 :
+                        posAtual == 0 || posAtual == 2 || posAtual == 4 ? 1 : 
+                        posAtual == 3 || posAtual == 5 || posAtual == 7 ? 2 : 3; /*6 ou 7*/
+            break;
+            
+            case 2:
+                dist =  posAtual == 2 ? 0 :
+                        posAtual == 1 || posAtual == 5? 1 : 
+                        posAtual == 0 || posAtual == 4 || posAtual == 8 ? 2 :
+                        posAtual == 3 || posAtual == 7 ? 3 : 4; /*6*/
+            break;
+            
+            case 3:
+                dist =  posAtual == 3 ? 0 :
+                        posAtual == 0 || posAtual == 4 || posAtual == 6 ? 1 : 
+                        posAtual == 1 || posAtual == 5 || posAtual == 7 ? 2 : 3; /*2 ou 8*/
+            break;
+            
+            case 4:
+                dist =  posAtual == 4 ? 0 :
+                        posAtual == 1 || posAtual == 3 || posAtual == 5 || posAtual == 7 ? 1 : 2; /*0, 2, 6 ou 8*/
+            break;
+            
+            case 5:
+                dist =  posAtual == 5 ? 0 :
+                        posAtual == 2 || posAtual == 4 || posAtual == 8 ? 1 : 
+                        posAtual == 1 || posAtual == 3 || posAtual == 7 ? 2 : 3; /*0 ou 6*/
+            break;
+            
+            case 6:
+                dist =  posAtual == 6 ? 0 :
+                        posAtual == 3 || posAtual == 7 ? 1 : 
+                        posAtual == 0 || posAtual == 4 || posAtual == 8 ? 2 :
+                        posAtual == 1 || posAtual == 5 ? 3 : 4; /*2*/
+            break;
+            
+            case 7:
+                dist =  posAtual == 7 ? 0 :
+                        posAtual == 4 || posAtual == 6 || posAtual == 8 ? 1 : 
+                        posAtual == 1 || posAtual == 3 || posAtual == 5 ? 2 : 3; /*0 ou 2*/
+            break;
+            
+            case 8:
+                dist =  posAtual == 8 ? 0 :
+                        posAtual == 5 || posAtual == 7 ? 1 : 
+                        posAtual == 2 || posAtual == 4 || posAtual == 6 ? 2 :
+                        posAtual == 1 || posAtual == 3 ? 3 : 4; /*0*/
+            break;
+            
+            default:
+            break;
+        }
+        return dist;
+    }
+    
+    //Adiciona na pilha de vizinhos todos os vizinhos da posição desejada
+    public Pilha pegarVizinhos(Pilha p, int pos)
+    {
+        switch(pos)
+        {
+            case 0:
+                p.push(1); p.push(3);
+            break;
+            
+            case 1:
+                p.push(0); p.push(2); p.push(4);
+            break;
+            
+            case 2:
+                p.push(1); p.push(5);
+            break;
+            
+            case 3:
+                p.push(0); p.push(4); p.push(6);
+            break;
+            
+            case 4:
+                p.push(1); p.push(3);
+                p.push(5); p.push(7);
+            break;
+            
+            case 5:
+                p.push(2); p.push(4); p.push(8);
+            break;
+            
+            case 6:
+                p.push(3); p.push(7);
+            break;
+            
+            case 7:
+                p.push(4); p.push(6); p.push(8);
+            break;
+            
+            case 8:
+                p.push(5); p.push(7);
+            break;
+        }
+        return p;
+    }
+    
+    //Verifica se todas as peças estão no lugar correto.
+    public boolean validarPecas()
+    {
+        int i = 0;
+        while(i < 9 && imgs[i].getId() == i)
+            i++;
+        return i == 9;
+    }
+    
+    public boolean buscaProfundidade()
+    {
+        /*
+            A idéia desta busca é pegar o primeiro nó na sequência e ir buscando.
+            Se chegar no final e não for o desejado, retrocede uma etapa (backtracking)
+            e pega o segundo caminho. Vai retrocedendo até achar o resultado procurado.
+        */
+        
+        pilha = new Pilha();
+        int bandeira = this.bandeira;
+        estados = new Estados();
+        
+        profundidade = 0;
+        
+        return dfs(bandeira);
+        /*if(validarPecas())
+            return true;
+        return false;*/
+    }
+
+    private int[] getEstado()
+    {
+        int[] aux = new int[9];
+        for (int i = 0; i < 9; i++)
+            aux[i] = imgs[i].getId();
+        
+        return aux;
+    }
+    
+    private int profundidade = 0;
+    
+    private boolean dfs(int bandeira) {
+        /*
+        if(validarPecas())
+            return true;
+        
+        int[] aux = getEstado();
+        estados.addEstado(aux);
+        
+        int filho;
+        Pilha p = new Pilha();
+        p = pegarVizinhos(p, bandeira);
+        while(!p.isEmpty())
+        {
+            filho = p.pop();
+            mov(filho);
+            bandeira = getBandeira();
+            estados.addVisitado(aux, bandeira);
+            
+            if(!estados.contem(getEstado()))
+            {
+                return dfs(filho);
+            }
+            else
+            {
+                if(!estados.foiVisitado(getEstado(), filho))
+                    return dfs(filho);
+            }
+        }
+        return false;
+        */
+        return true;
+    }
+    
 }

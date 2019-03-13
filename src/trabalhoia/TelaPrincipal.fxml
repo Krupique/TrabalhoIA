@@ -125,7 +125,7 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <JFXRadioButton layoutX="14.0" layoutY="36.0" text="Busca 1" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0">
+                  <JFXRadioButton fx:id="rdBuscaProfundidade" layoutX="14.0" layoutY="36.0" onAction="#evtBuscaProfundidade" text="Busca em Profundidade (Depth First Search)" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

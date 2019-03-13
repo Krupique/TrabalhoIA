@@ -104,6 +104,8 @@ public class TelaPrincipalController implements Initializable {
     private ImageView imgpre3;
     @FXML
     private ImageView imgpre4;
+    @FXML
+    private JFXRadioButton rdBuscaProfundidade;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -209,12 +211,11 @@ public class TelaPrincipalController implements Initializable {
         
     }
     
+    //Função não concluída. Vo fazer se der vontade E tiver tempo.
     private void printMec(int pos, int bandeira)
     {
         Image[] imgs = algoritmos.getImgs();
         bandeira = algoritmos.getBandeira();
-        
-        
     }
 
     @FXML
@@ -240,6 +241,14 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtBuscarSolucao(ActionEvent event) {
         exibirProgress(true);
+        
+        if(algoritmos.buscaProfundidade())
+        {
+            System.out.println("Fez");
+        }
+        else
+            System.out.println("Nao achou");
+        
     }
 
     @FXML
@@ -457,5 +466,9 @@ public class TelaPrincipalController implements Initializable {
 
     public static int getBandeira() {
         return bandeira;
+    }
+
+    @FXML
+    private void evtBuscaProfundidade(ActionEvent event) {
     }
 }
