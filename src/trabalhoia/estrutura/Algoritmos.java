@@ -318,12 +318,12 @@ public class Algoritmos {
         int bandeira = this.bandeira;
         estados = new Estados();
         
-        profundidade = 0;
+        Pilha partida = new Pilha();
+        partida = pegarVizinhos(partida, bandeira);
         
-        return dfs(bandeira);
-        /*if(validarPecas())
-            return true;
-        return false;*/
+        boolean res = dfs(partida.pop());
+        this.bandeira = getBandeira();
+        return res;
     }
 
     private int[] getEstado()
@@ -335,39 +335,55 @@ public class Algoritmos {
         return aux;
     }
     
-    private int profundidade = 0;
+    private void setEstado(int[] estado)
+    {
+        Imagem temp;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 1; j < 9; j++) {
+                if(estado[i] != imgs[j].getId())
+                {
+                    temp = imgs[j];
+                    imgs[j] = imgs[i];
+                    imgs[i] = temp;
+                }
+            }
+        }
+    }
     
-    private boolean dfs(int bandeira) {
-        /*
+    
+    //Não to conseguindo fazer a busca em profundidade dessa porra.
+    //Ta perdendo as pregas, digo referências.
+    private boolean dfs(int rota) {
         if(validarPecas())
             return true;
         
-        int[] aux = getEstado();
-        estados.addEstado(aux);
-        
-        int filho;
-        Pilha p = new Pilha();
-        p = pegarVizinhos(p, bandeira);
-        while(!p.isEmpty())
+        int[] atual = getEstado();
+        Pilha p;
+        if(estados.contem(atual))
         {
-            filho = p.pop();
-            mov(filho);
-            bandeira = getBandeira();
-            estados.addVisitado(aux, bandeira);
-            
-            if(!estados.contem(getEstado()))
-            {
-                return dfs(filho);
-            }
+            if(estados.foiVisitado(atual, rota))
+                return false;
             else
             {
-                if(!estados.foiVisitado(getEstado(), filho))
-                    return dfs(filho);
+                estados.addVisitado(atual, rota);
+                mov(rota);
+                p = new Pilha();
+                p = pegarVizinhos(p, rota);
+                while(!p.isEmpty())
+                {
+                    int aux = p.pop();
+                    boolean flag = dfs(aux);
+                    if(flag)
+                        return true;
+                }
             }
         }
+        else
+        {
+            estados.addEstado(atual);
+            return dfs(rota);
+        }
         return false;
-        */
-        return true;
     }
     
 }
