@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXRadioButton;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -31,6 +32,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trabalhoia.estrutura.Algoritmos;
+import trabalhoia.estrutura.BuscaProfundidadeThread;
 
 /**
  *
@@ -96,6 +98,7 @@ public class TelaPrincipalController implements Initializable {
     private Image imgPrincipal;
     private Algoritmos algoritmos;
     private static int bandeira;
+    Thread th = new Thread();
     @FXML
     private ImageView imgpre1;
     @FXML
@@ -196,7 +199,7 @@ public class TelaPrincipalController implements Initializable {
         print();
     }
     
-    private void print()
+    public void print()
     {
         Image[] imgs = algoritmos.getImgs();
         img1.setImage(imgs[0]);
@@ -241,15 +244,8 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtBuscarSolucao(ActionEvent event) {
         exibirProgress(true);
-        /*int[] test = {8,7,6,5,4,3,2,1,0};
-        algoritmos.setEstado(test);*/
-        
-        if(algoritmos.buscaProfundidade())
-        {
-            System.out.println("Fez");
-        }
-        else
-            System.out.println("Nao achou");
+        th = new Thread(new BuscaProfundidadeThread(this, algoritmos));
+        th.start();
         
     }
 
@@ -286,7 +282,7 @@ public class TelaPrincipalController implements Initializable {
         btBuscarSolucao.setVisible(value);
     }
     
-    private void exibirProgress(boolean value)
+    public void exibirProgress(boolean value)
     {
         progresslabel.setVisible(value);
         progressbar.setVisible(value);

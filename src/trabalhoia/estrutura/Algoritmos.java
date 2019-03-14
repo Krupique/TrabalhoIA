@@ -5,6 +5,7 @@
  */
 package trabalhoia.estrutura;
 
+import trabalhoia.utilidades.Estados;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.scene.image.Image;
@@ -21,6 +22,7 @@ public class Algoritmos {
     private ArrayList<Integer> array;
     private Estados estados;
     private int profundidade;
+    private ArrayList<Integer> movimentos;
     
     public Algoritmos(Image img, int flag)
     {
@@ -118,12 +120,17 @@ public class Algoritmos {
         return i;
     }
     
+    public void setBandeira(int bandeira)
+    {
+        this.bandeira = bandeira;
+    }
+    
     public boolean movimentar(int pos)
     {
         return mov(--pos);
     }
     
-    private boolean mov(int pos)
+    public boolean mov(int pos)
     {
         if(isPossible(pos))
         {
@@ -307,7 +314,7 @@ public class Algoritmos {
         return i == 9;
     }
     
-    private int[] getEstado()
+    public int[] getEstado()
     {
         int[] aux = new int[9];
         for (int i = 0; i < 9; i++)
@@ -317,21 +324,18 @@ public class Algoritmos {
     }
     
     //Arrumar essa função
-    private void setEstado(int[] estado)
+    public void setEstado(int[] estado)
     {
-        Imagem temp;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 1; j < 9; j++) {
-                if(estado[i] != imgs[j].getId())
-                {
-                    temp = imgs[j];
-                    imgs[j] = imgs[i];
-                    imgs[i] = temp;
-                }
-            }
-        }
+        Imagem[] temp = new Imagem[9];
+        for (int i = 0; i < 9; i++)
+            temp[i] = new Imagem(imgs[i].getImg(), imgs[i].getId(), imgs[i].getFlag());
+        
+        for (int i = 0; i < 9; i++)
+            imgs[i] = new Imagem(temp[estado[i]].getImg(), temp[estado[i]].getId(), temp[estado[i]].getFlag());
+    
     }
     
+    /*
     public boolean buscaProfundidade()
     {
         /*
@@ -339,79 +343,55 @@ public class Algoritmos {
             Se chegar no final e não for o desejado, retrocede uma etapa (backtracking)
             e pega o segundo caminho. Vai retrocedendo até achar o resultado procurado.
         */
-        
-        pilha = new Pilha();
-        //estados = new Estados();
+        /*
         profundidade = 0;
+        movimentos = new ArrayList<>();
         
-        pilha = pegarVizinhos(pilha, bandeira);
-        boolean res = dfs(pilha.pop(), profundidade);
+        boolean res = dfs(bandeira, profundidade);
+        
+        if(validarPecas())
+            System.out.println("Aprovada e comprovada");
         return res;
-    }
+    }*/
     
     
     //Não to conseguindo fazer a busca em profundidade dessa porra.
     //Ta perdendo as pregas, digo referências.
     //Arrumar o setEstado e testar essa função.
-    private boolean dfs(int bandeira, int profundidade)
+    /*private boolean dfs(int bandeira, int profundidade)
     {
-        System.out.println("Prof: " + profundidade);
-        if(validarPecas())
-            return true;
-        
-        Pilha p = new Pilha();
-        p = pegarVizinhos(p, bandeira);
-        
-        while(!p.isEmpty())
-        {
-            int rota = p.pop();
-            int[] estado = getEstado();
-            mov(rota);
-            this.bandeira = rota;
-            
-            if(profundidade < 15)
-            {
-                if(dfs(rota, ++profundidade))
-                    return true;
-            }
-            setEstado(estado);
-        }
-        return false;
-    }
-    
-    /*
-    @Deprecated
-    private boolean oldDfs(int rota) {
-        if(validarPecas())
-            return true;
-        
-        int[] atual = getEstado();
-        Pilha p;
-        if(estados.contem(atual))
-        {
-            if(estados.foiVisitado(atual, rota))
-                return false;
-            else
-            {
-                estados.addVisitado(atual, rota);
-                mov(rota);
-                p = new Pilha();
-                p = pegarVizinhos(p, rota);
-                while(!p.isEmpty())
-                {
-                    int aux = p.pop();
-                    boolean flag = dfs(aux);
-                    if(flag)
-                        return true;
-                }
-            }
-        }
+        System.out.println("Profundidade: " + profundidade);
+        if(profundidade > 20)
+            return false;
         else
         {
-            estados.addEstado(atual);
-            return dfs(rota);
+            if(validarPecas())
+                return true;
+
+            Pilha possib = new Pilha();
+            possib = pegarVizinhos(possib, bandeira);
+
+            while(!possib.isEmpty())
+            {
+                int rota = possib.pop();
+                int[] atual = getEstado();
+
+                mov(rota);
+                if (dfs(rota, ++profundidade))
+                    return true;
+                else
+                {
+                    setEstado(atual);
+                }
+            }
+
+            return false;
         }
-        return false;
+        
     }*/
+
+    public ArrayList<Integer> getMovimentos() {
+        return movimentos;
+    }
     
 }
