@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javafx.scene.image.Image;
 import trabalhoia.utilidades.Divisor;
+import trabalhoia.utilidades.Vizinho;
 
 /**
  * @author Henrique K. Secchi
@@ -20,7 +21,7 @@ public class Algoritmos {
     private int bandeira; //Indica qual é a posição nula (sem imagem).
     private Pilha pilha;
     private ArrayList<Integer> array;
-    private Estados estados;
+    private Estados visitados;
     private int profundidade;
     private ArrayList<Integer> movimentos;
     
@@ -138,6 +139,8 @@ public class Algoritmos {
             imgs[bandeira] = imgs[pos];
             imgs[pos] = temp;
             bandeira = pos;
+            
+            setEstado(getEstado());
             return true;
         }
         else 
@@ -305,6 +308,50 @@ public class Algoritmos {
         return p;
     }
     
+    public Fila pegarVizinhos(Fila f, int pos)
+    {
+        switch(pos)
+        {
+            case 0:
+                f.queue(1, getEstado()); f.queue(3, getEstado());
+            break;
+            
+            case 1:
+                f.queue(0, getEstado()); f.queue(2, getEstado()); f.queue(4, getEstado());
+            break;
+            
+            case 2:
+                f.queue(1, getEstado()); f.queue(5, getEstado());
+            break;
+            
+            case 3:
+                f.queue(0, getEstado()); f.queue(4, getEstado()); f.queue(6, getEstado());
+            break;
+            
+            case 4:
+                f.queue(1, getEstado()); f.queue(3, getEstado());
+                f.queue(5, getEstado()); f.queue(7, getEstado());
+            break;
+            
+            case 5:
+                f.queue(2, getEstado()); f.queue(4, getEstado()); f.queue(8, getEstado());
+            break;
+            
+            case 6:
+                f.queue(3, getEstado()); f.queue(7, getEstado());
+            break;
+            
+            case 7:
+                f.queue(4, getEstado()); f.queue(6, getEstado()); f.queue(8, getEstado());
+            break;
+            
+            case 8:
+                f.queue(5, getEstado()); f.queue(7, getEstado());
+            break;
+        }
+        return f;
+    }
+    
     //Verifica se todas as peças estão no lugar correto.
     public boolean validarPecas()
     {
@@ -323,16 +370,81 @@ public class Algoritmos {
         return aux;
     }
     
-    //Arrumar essa função
     public void setEstado(int[] estado)
     {
-        Imagem[] temp = new Imagem[9];
-        for (int i = 0; i < 9; i++)
-            temp[i] = new Imagem(imgs[i].getImg(), imgs[i].getId(), imgs[i].getFlag());
-        
-        for (int i = 0; i < 9; i++)
-            imgs[i] = new Imagem(temp[estado[i]].getImg(), temp[estado[i]].getId(), temp[estado[i]].getFlag());
+        if(!compararEstados(estado, getEstado()))
+        {   
+            Imagem[] temp = new Imagem[9];
+            for (int i = 0; i < 9; i++)
+                temp[i] = new Imagem(imgs[i].getImg(), imgs[i].getId(), imgs[i].getFlag());
+
+            for (int i = 0; i < 9; i++) //Nenhum dos dois jeitos funciona
+                imgs[i] = new Imagem(temp[estado[i]].getImg(), temp[estado[i]].getId(), temp[estado[i]].getFlag());
+                //imgs[estado[i]] = new Imagem(temp[i].getImg(), temp[i].getId(), temp[i].getFlag());
+            bandeira = getBandeira();
+        }
+    }
     
+    private boolean compararEstados(int[] es1, int[] es2)
+    {
+        int i = 0;
+        
+        while(i < es1.length && es1[i] == es2[i])
+            i++;
+        
+        if(i < es1.length)
+            return false;
+        return true;
+    }
+    
+    public void buscaLargura()
+    {
+        /*
+            Descrição. 
+        */
+        
+        visitados = new Estados();
+        Fila fila = new Fila();
+        bfs(fila);
+    }
+    
+    /*Breadth-First Search*/
+    public boolean bfs(Fila fila)
+    {
+        if(visitados.foiVisitado(getEstado())) //Esse estado atual já foi visitado?
+            return false;
+        else
+        {
+            if(validarPecas()) //Retorna se posição for válida.
+                return true;
+            else
+            {
+                if(!fila.isEmpty()) //Retira o primeiro elemento da fila, salvo a primeira vez que entrar no algoritmo.
+                {
+                    int[] cupreto = (int[])fila.dequeue()[1];
+                    setEstado(cupreto);
+                }
+                
+                int[] atual = getEstado(); //Pega o estado atual e adiciona aos visitados.
+                visitados.addEstado(atual);
+
+                Fila faux = new Fila();
+                faux = pegarVizinhos(faux, bandeira); //Adiciona todas as possibilidades de movimentos.
+                Object[] obj;
+                while(!faux.isEmpty())
+                {
+                    obj = faux.dequeue();
+                    fila.queue((int)obj[0], (int[])obj[1]);
+                }
+                
+                setEstado(fila.getPrimeiroEstado());
+                int[] test1 = getEstado();
+                mov(fila.getPrimeiroFila());
+                int[] test2 = getEstado();
+                
+                return bfs(fila);
+            }
+        }
     }
     
     /*

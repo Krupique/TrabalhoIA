@@ -109,6 +109,8 @@ public class TelaPrincipalController implements Initializable {
     private ImageView imgpre4;
     @FXML
     private JFXRadioButton rdBuscaProfundidade;
+    @FXML
+    private JFXRadioButton rdBuscaLargura;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -468,5 +470,11 @@ public class TelaPrincipalController implements Initializable {
 
     @FXML
     private void evtBuscaProfundidade(ActionEvent event) {
+    }
+
+    @FXML
+    private void evtBuscaLargura(ActionEvent event) {
+        algoritmos.buscaLargura();
+        
     }
 }

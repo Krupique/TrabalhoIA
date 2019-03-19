@@ -13,51 +13,46 @@ import java.util.ArrayList;
  */
 public class Estados {
     
-    private ArrayList<Estado> estados;
+    private ArrayList<int[]> estados;
     
     public Estados()
     {
-        estados = new ArrayList<Estado>();
+        estados = new ArrayList<int[]>();
     }
     
     public void addEstado(int[] estado)
     {
-        estados.add(new Estado(estado));
+        estados.add(estado);
     }
     
-    public void addVisitado(int[] estado, int pos)
+    public boolean foiVisitado(int[] estado)
     {
-        int flag = estaContido(estado);
-        estados.get(flag).addVisitado(pos);
-    }
-    
-    private int estaContido(int[] estado)
-    {
-        int[] aux;
-        for (int i = 0; i < estados.size(); i++) {
-            aux = estados.get(i).getEstado();
-            
+        int i = 0;
+        boolean flag = true;
+        boolean achou = false;
+        while(i < estados.size() && !achou)
+        {
             int j = 0;
-            while(j < estado.length && estado[j] == aux[j])
+            flag = true;
+            while(j < estado.length && flag)
+            {
+                if(estado[j] != estados.get(i)[j])
+                    flag = false;
                 j++;
+            }
             
-            if(!(j < estado.length))
-                return i;
+            if(flag)
+                achou = true;
+            
+            i++;
         }
-        return -1;
+        
+        return achou;
     }
     
-    public boolean foiVisitado(int[] estado, int pos)
-    {
-        int flag = estaContido(estado);
-        if(flag == -1)
-            return false;
-        else
-            return estados.get(flag).foiVisitado(pos);
-    }
     
-    public boolean contem(int[] estado)
+    public int[] getEstado(int pos)
     {
-        return estaContido(estado) != -1;
+        return estados.get(pos);
     }
 }
