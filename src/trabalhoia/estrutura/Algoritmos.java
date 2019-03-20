@@ -62,6 +62,15 @@ public class Algoritmos {
         
         return vet;
     }
+
+    public Estados getVisitados() {
+        return visitados;
+    }
+
+    public void setVisitados(Estados visitados) {
+        this.visitados = visitados;
+    }
+    
     
     public Image getImgPos(int pos)
     {
@@ -194,7 +203,6 @@ public class Algoritmos {
         return flag;
     }
     
-    //Ta um saco essa função, eu sei. Mas eu não to com vontade de pensar em uma solução para calcular a distância de maneira automática.
     private int calcularDistancia(int id, int posAtual)
     {
         int dist = -1;
@@ -372,6 +380,7 @@ public class Algoritmos {
     
     public void setEstado(int[] estado)
     {
+        int j;
         if(!compararEstados(estado, getEstado()))
         {   
             Imagem[] temp = new Imagem[9];
@@ -379,8 +388,15 @@ public class Algoritmos {
                 temp[i] = new Imagem(imgs[i].getImg(), imgs[i].getId(), imgs[i].getFlag());
 
             for (int i = 0; i < 9; i++) //Nenhum dos dois jeitos funciona
-                imgs[i] = new Imagem(temp[estado[i]].getImg(), temp[estado[i]].getId(), temp[estado[i]].getFlag());
+                //imgs[i] = new Imagem(temp[estado[i]].getImg(), temp[estado[i]].getId(), temp[estado[i]].getFlag());
                 //imgs[estado[i]] = new Imagem(temp[i].getImg(), temp[i].getId(), temp[i].getFlag());
+            {
+                j = 0;
+                while(j < estado.length && estado[i] != temp[j].getId())
+                    j++;
+                
+                imgs[i] = new Imagem(temp[j].getImg(), temp[j].getId(), temp[j].getFlag());
+            }
             bandeira = getBandeira();
         }
     }
@@ -397,111 +413,47 @@ public class Algoritmos {
         return true;
     }
     
-    public void buscaLargura()
+    
+    public boolean validarFimDeJogo()
     {
-        /*
-            Descrição. 
-        */
+        int i = 0;
+        int[] atual = getEstado();
         
-        visitados = new Estados();
-        Fila fila = new Fila();
-        bfs(fila);
+        while(i < atual.length && atual[i] == i)
+            i++;
+        
+        if(i < atual.length)
+            return false;
+        return true;
     }
     
-    /*Breadth-First Search*/
-    public boolean bfs(Fila fila)
+    
+    public int getPecasForaDoLugar()
     {
-        if(visitados.foiVisitado(getEstado())) //Esse estado atual já foi visitado?
-            return false;
-        else
-        {
-            if(validarPecas()) //Retorna se posição for válida.
-                return true;
-            else
-            {
-                if(!fila.isEmpty()) //Retira o primeiro elemento da fila, salvo a primeira vez que entrar no algoritmo.
-                {
-                    int[] cupreto = (int[])fila.dequeue()[1];
-                    setEstado(cupreto);
-                }
-                
-                int[] atual = getEstado(); //Pega o estado atual e adiciona aos visitados.
-                visitados.addEstado(atual);
-
-                Fila faux = new Fila();
-                faux = pegarVizinhos(faux, bandeira); //Adiciona todas as possibilidades de movimentos.
-                Object[] obj;
-                while(!faux.isEmpty())
-                {
-                    obj = faux.dequeue();
-                    fila.queue((int)obj[0], (int[])obj[1]);
-                }
-                
-                setEstado(fila.getPrimeiroEstado());
-                int[] test1 = getEstado();
-                mov(fila.getPrimeiroFila());
-                int[] test2 = getEstado();
-                
-                return bfs(fila);
-            }
+        int cont = 0;
+        int[] atual = getEstado();
+        
+        for (int i = 0; i < atual.length; i++) {
+            if(atual[i] != i)
+                cont++;
         }
+        return cont;
     }
     
-    /*
-    public boolean buscaProfundidade()
+    public int getDistanciaTotal()
     {
-        /*
-            A idéia desta busca é pegar o primeiro nó na sequência e ir buscando.
-            Se chegar no final e não for o desejado, retrocede uma etapa (backtracking)
-            e pega o segundo caminho. Vai retrocedendo até achar o resultado procurado.
-        */
-        /*
-        profundidade = 0;
-        movimentos = new ArrayList<>();
+        int dist = 0;
+        int[] atual = getEstado();
         
-        boolean res = dfs(bandeira, profundidade);
-        
-        if(validarPecas())
-            System.out.println("Aprovada e comprovada");
-        return res;
-    }*/
-    
-    
-    //Não to conseguindo fazer a busca em profundidade dessa porra.
-    //Ta perdendo as pregas, digo referências.
-    //Arrumar o setEstado e testar essa função.
-    /*private boolean dfs(int bandeira, int profundidade)
-    {
-        System.out.println("Profundidade: " + profundidade);
-        if(profundidade > 20)
-            return false;
-        else
-        {
-            if(validarPecas())
-                return true;
-
-            Pilha possib = new Pilha();
-            possib = pegarVizinhos(possib, bandeira);
-
-            while(!possib.isEmpty())
+        for (int i = 0; i < atual.length; i++) {
+            if(atual[i] != i)
             {
-                int rota = possib.pop();
-                int[] atual = getEstado();
-
-                mov(rota);
-                if (dfs(rota, ++profundidade))
-                    return true;
-                else
-                {
-                    setEstado(atual);
-                }
+                dist += calcularDistancia(i, atual[i]);
             }
-
-            return false;
         }
-        
-    }*/
-
+        return dist;
+    }
+    
     public ArrayList<Integer> getMovimentos() {
         return movimentos;
     }

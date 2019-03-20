@@ -130,7 +130,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXRadioButton>
-                  <JFXRadioButton layoutX="14.0" layoutY="66.0" text="Busca Heusística" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="95.0">
+                  <JFXRadioButton fx:id="rdBestFirst" layoutX="14.0" layoutY="66.0" onAction="#evtBestFirst" text="Busca Heurística (Best First)" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="95.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

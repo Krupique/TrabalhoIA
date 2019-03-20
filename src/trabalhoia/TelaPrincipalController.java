@@ -32,7 +32,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trabalhoia.estrutura.Algoritmos;
-import trabalhoia.estrutura.BuscaProfundidadeThread;
+import trabalhoia.threads.BestFirstThread;
+import trabalhoia.threads.BuscaLarguraThread;
+import trabalhoia.threads.BuscaProfundidadeThread;
+import trabalhoia.threads.ExibirPredefinidos;
 
 /**
  *
@@ -99,6 +102,10 @@ public class TelaPrincipalController implements Initializable {
     private Algoritmos algoritmos;
     private static int bandeira;
     Thread th = new Thread();
+    private int flagBusca;
+    private int movManuais;
+    private ArrayList<Integer> listMovimentos;
+    
     @FXML
     private ImageView imgpre1;
     @FXML
@@ -111,6 +118,8 @@ public class TelaPrincipalController implements Initializable {
     private JFXRadioButton rdBuscaProfundidade;
     @FXML
     private JFXRadioButton rdBuscaLargura;
+    @FXML
+    private JFXRadioButton rdBestFirst;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -119,11 +128,16 @@ public class TelaPrincipalController implements Initializable {
         iniciarImagens();
         rdCasos(false, false, false, true);
         rdMetodo(true, false);
+        setRdBuscas(true, false, false);
         exibirProgress(false);
         
+        movManuais = 0;
         imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
+        
+        flagBusca = 1;
+        listMovimentos = new ArrayList<>();
     }    
     
     public void iniciarImagens()
@@ -174,6 +188,7 @@ public class TelaPrincipalController implements Initializable {
                     imgPrincipal = new Image(arq.toURI().toString());
                     algoritmos = new Algoritmos(imgPrincipal, bandeira);
                     print();
+                    movManuais = 0;
                 }
                 else{
                     Alert a = new Alert(Alert.AlertType.ERROR, "Imagem inválida frango!\nAlgum dos lados da imagem não é múltiplo de 3!\nCertifique-se de abrir uma imagem quadrada e de tamanho múltiplo de 3!", ButtonType.OK);
@@ -192,13 +207,14 @@ public class TelaPrincipalController implements Initializable {
     private void evtOrdenar(ActionEvent event) {
         algoritmos.ordenar();
         print();
-        
+        movManuais = 0;
     }
 
     @FXML
     private void evtEmbaralhar(ActionEvent event) {
         algoritmos.embaralhar();
         print();
+        movManuais = 0;
     }
     
     public void print()
@@ -226,8 +242,28 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtCaso1(ActionEvent event) {
         rdCasos(true, false, false, false);
+        
+        algoritmos.setEstado(new int[]{3, 0, 1, 4, 7, 2, 8, 6, 5});
+        setArrayMov(new int[]{7, 4, 3, 0, 1, 2, 5, 8});
+        flagBusca = 4;
+        
+        print();
     }
 
+    private void setArrayMov(int[] estado)
+    {
+        for (int i = 0; i < estado.length; i++) {
+            listMovimentos.add(estado[i]);
+            System.out.print(estado[i] + " - ");
+        }
+    }
+
+    public ArrayList<Integer> getListMovimentos() {
+        return listMovimentos;
+    }
+    
+    
+    
     @FXML
     private void evtCaso2(ActionEvent event) {
         rdCasos(false, true, false, false);
@@ -246,8 +282,34 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtBuscarSolucao(ActionEvent event) {
         exibirProgress(true);
-        th = new Thread(new BuscaProfundidadeThread(this, algoritmos));
-        th.start();
+        
+        switch(flagBusca)
+        {
+            case 1: 
+                th = new Thread(new BuscaProfundidadeThread(this, algoritmos));
+                th.start();
+            break;
+            
+            
+            case 2:
+                th = new Thread(new BuscaLarguraThread(this, algoritmos));
+                th.start();
+            break;
+       
+            case 3:
+                th = new Thread(new BestFirstThread(this, algoritmos));
+                th.start();
+            break;
+            
+            case 4:
+                th = new Thread(new ExibirPredefinidos(this, algoritmos));
+                th.start();
+            break;
+            
+            default:
+            break;
+        }
+        th.interrupt();
         
     }
 
@@ -294,19 +356,41 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg1(MouseEvent event) {
         System.out.println("teste1");
         if(algoritmos.movimentar(1))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
             a.showAndWait();
         }
+        
+        
     }
 
     @FXML
     private void evtClickImg2(MouseEvent event) {
         System.out.println("teste2");
         if(algoritmos.movimentar(2))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -318,7 +402,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg3(MouseEvent event) {
         System.out.println("teste3");
         if(algoritmos.movimentar(3))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -330,7 +424,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg4(MouseEvent event) {
         System.out.println("teste4");
         if(algoritmos.movimentar(4))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -342,7 +446,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg5(MouseEvent event) {
         System.out.println("teste5");
         if(algoritmos.movimentar(5))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -354,7 +468,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg6(MouseEvent event) {
         System.out.println("teste6");
         if(algoritmos.movimentar(6))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -366,7 +490,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg7(MouseEvent event) {
         System.out.println("teste7");
         if(algoritmos.movimentar(7))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -378,7 +512,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg8(MouseEvent event) {
         System.out.println("teste8");
         if(algoritmos.movimentar(8))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -390,7 +534,17 @@ public class TelaPrincipalController implements Initializable {
     private void evtClickImg9(MouseEvent event) {
         System.out.println("teste9");
         if(algoritmos.movimentar(9))
+        {
+            movManuais++;
             print();
+            if(algoritmos.validarFimDeJogo())
+            {
+                Alert a =  new Alert(Alert.AlertType.INFORMATION, "Parabéns!\nVocê concluiu o jogo em " + movManuais +" movimentos! Agora saia do joguinho e volte a estudar!", ButtonType.OK);
+                a.showAndWait();
+                algoritmos.setEstado(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                movManuais = 0;
+            }
+        }
         else
         {
             Alert a =  new Alert(Alert.AlertType.ERROR, "Impossível mover esta peça frango!", ButtonType.OK);
@@ -403,6 +557,7 @@ public class TelaPrincipalController implements Initializable {
         imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
+        movManuais = 0;
     }
 
     @FXML
@@ -410,6 +565,7 @@ public class TelaPrincipalController implements Initializable {
         imgPrincipal = new Image("trabalhoia/recursos/namorada.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
+        movManuais = 0;
     }
 
     @FXML
@@ -417,6 +573,7 @@ public class TelaPrincipalController implements Initializable {
         imgPrincipal = new Image("trabalhoia/recursos/eu.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
+        movManuais = 0;
     }
 
     @FXML
@@ -424,11 +581,13 @@ public class TelaPrincipalController implements Initializable {
         imgPrincipal = new Image("trabalhoia/recursos/flamengo.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
+        movManuais = 0;
     }
 
     @FXML
     private void evtOpen(ActionEvent event) {
         abrirImagem();
+        movManuais = 0;
     }
 
     @FXML
@@ -450,6 +609,7 @@ public class TelaPrincipalController implements Initializable {
             bandeira = TelaBandeiraController.getBandeira();
             algoritmos = new Algoritmos(imgPrincipal, bandeira);
             print();
+            movManuais = 0;
         }catch(Exception er){
             Alert a = new Alert(Alert.AlertType.ERROR, "Erro ao abrir tela bandeira! " + er.getMessage(), ButtonType.OK);
             a.showAndWait();
@@ -470,11 +630,39 @@ public class TelaPrincipalController implements Initializable {
 
     @FXML
     private void evtBuscaProfundidade(ActionEvent event) {
+        setRdBuscas(true, false, false);
+        rdCasos(false, false, false, true);
+        flagBusca = 1;
     }
 
     @FXML
     private void evtBuscaLargura(ActionEvent event) {
-        algoritmos.buscaLargura();
+        setRdBuscas(false, true, false);
+        rdCasos(false, false, false, true);
+        flagBusca = 2;
+    }
+
+    @FXML
+    private void evtBestFirst(ActionEvent event) {
+        setRdBuscas(false, false, true);
+        rdCasos(false, false, false, true);
+        flagBusca = 3;
+    }
+    
+    public void setRdBuscas(boolean v1, boolean v2, boolean v3)
+    {
+        rdBuscaProfundidade.setSelected(v1);
+        rdBuscaLargura.setSelected(v2);
+        rdBestFirst.setSelected(v3);
+    }
+    
+    public void exibirResultados(int prof, int larg, int heu)
+    {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Busca realizada em:"
+                + "\nProfundidade (Depth First): " + prof
+                + "\nLargura (Breadth First): " + larg 
+                + "\nHeurística (Best First): " + heu, ButtonType.OK);
         
+        a.showAndWait();
     }
 }

@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package trabalhoia.estrutura;
+package trabalhoia.threads;
 
 import java.util.ArrayList;
 import trabalhoia.TelaPrincipalController;
+import trabalhoia.estrutura.Algoritmos;
+import trabalhoia.estrutura.Pilha;
 
 /**
  *
@@ -17,6 +19,7 @@ public class BuscaProfundidadeThread implements Runnable{
     private Algoritmos algoritmos;
     private ArrayList<Integer> movimentos;
     private int profundidade;
+    private int mov;
 
     public BuscaProfundidadeThread(TelaPrincipalController tela, Algoritmos algoritmos) {
         this.tela = tela;
@@ -33,17 +36,7 @@ public class BuscaProfundidadeThread implements Runnable{
             if(buscaProfundidade())
             {
                 System.out.println("Conseguiu");
-                algoritmos.setBandeira(algoritmos.getBandeira());
-                
-                for (int i = 0; i < movimentos.size(); i--) { //A ideia é pegar todos os movimentos no array de movimentos e exibir só os movimentos utilizados para completar o desafio.
-                    try
-                    {
-                        tela.print();
-                        algoritmos.mov(movimentos.get(i));
-                        Thread.sleep(300);
-                    }catch(Exception er){}
-                }
-                tela.print();
+                System.out.println("Movimentos: " + mov);
             }
             else
                 System.out.println("Nao conseguiu!");
@@ -65,7 +58,7 @@ public class BuscaProfundidadeThread implements Runnable{
         */
         
         profundidade = 0;
-        
+        mov = 0;
         //movimentos = new ArrayList<>();
         int[] estadoAtual = algoritmos.getEstado(); //Pega o estado atual das peças.
         boolean res = dfs(algoritmos.getBandeira(), profundidade);
@@ -89,6 +82,7 @@ public class BuscaProfundidadeThread implements Runnable{
 
             while(!possib.isEmpty())
             {
+                mov++;
                 int rota = possib.pop();
                 int[] atual = algoritmos.getEstado();
 
