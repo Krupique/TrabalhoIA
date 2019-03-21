@@ -105,6 +105,7 @@ public class TelaPrincipalController implements Initializable {
     private int flagBusca;
     private int movManuais;
     private ArrayList<Integer> listMovimentos;
+    public int getCaso;
     
     @FXML
     private ImageView imgpre1;
@@ -135,7 +136,6 @@ public class TelaPrincipalController implements Initializable {
         imgPrincipal = new Image("trabalhoia/recursos/numeros.png");
         algoritmos = new Algoritmos(imgPrincipal, bandeira);
         print();
-        
         flagBusca = 1;
         listMovimentos = new ArrayList<>();
     }    
@@ -231,30 +231,13 @@ public class TelaPrincipalController implements Initializable {
         img9.setImage(imgs[8]);
         
     }
-    
-    //Função não concluída. Vo fazer se der vontade E tiver tempo.
-    private void printMec(int pos, int bandeira)
-    {
-        Image[] imgs = algoritmos.getImgs();
-        bandeira = algoritmos.getBandeira();
-    }
-
-    @FXML
-    private void evtCaso1(ActionEvent event) {
-        rdCasos(true, false, false, false);
-        
-        algoritmos.setEstado(new int[]{3, 0, 1, 4, 7, 2, 8, 6, 5});
-        setArrayMov(new int[]{7, 4, 3, 0, 1, 2, 5, 8});
-        flagBusca = 4;
-        
-        print();
-    }
 
     private void setArrayMov(int[] estado)
     {
+        listMovimentos = new ArrayList<>();
         for (int i = 0; i < estado.length; i++) {
             listMovimentos.add(estado[i]);
-            System.out.print(estado[i] + " - ");
+            //System.out.print(estado[i] + " - ");
         }
     }
 
@@ -262,16 +245,47 @@ public class TelaPrincipalController implements Initializable {
         return listMovimentos;
     }
     
+    public int[] getMovimentos(int caso)
+    {
+        if(caso == 1)
+            return new int[]{213380, 3347, 8};
+        else if(caso == 2)
+            return new int[]{34621,1651,8};
+        else
+            return new int[]{5409,5812,10};
+    }
     
+    @FXML
+    private void evtCaso1(ActionEvent event) {
+        rdCasos(true, false, false, false);
+        getCaso = 1;
+        
+        algoritmos.setEstado(new int[]{3, 0, 1, 4, 7, 2, 8, 6, 5});
+        setArrayMov(new int[]{7, 4, 3, 0, 1, 2, 5, 8});
+        flagBusca = 4;
+        print();
+    }
     
     @FXML
     private void evtCaso2(ActionEvent event) {
         rdCasos(false, true, false, false);
+        getCaso = 2;
+        
+        algoritmos.setEstado(new int[]{1, 2, 5, 0, 3, 7, 6, 4, 8});
+        setArrayMov(new int[]{5, 2, 1, 0, 3, 4, 7, 8});
+        flagBusca = 4;
+        print();
     }
 
     @FXML
     private void evtCaso3(ActionEvent event) {
         rdCasos(false, false, true, false);
+        getCaso = 3;
+        
+        algoritmos.setEstado(new int[]{3, 0, 8, 6, 1, 2, 7, 5, 4});
+        setArrayMov(new int[]{5, 8, 7, 6, 3, 0, 1, 4, 5, 8});
+        flagBusca = 4;
+        print();
     }
 
     @FXML
@@ -282,37 +296,37 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private void evtBuscarSolucao(ActionEvent event) {
         exibirProgress(true);
-        
+
         switch(flagBusca)
         {
             case 1: 
                 th = new Thread(new BuscaProfundidadeThread(this, algoritmos));
                 th.start();
             break;
-            
-            
+
+
             case 2:
                 th = new Thread(new BuscaLarguraThread(this, algoritmos));
                 th.start();
             break;
-       
+
             case 3:
                 th = new Thread(new BestFirstThread(this, algoritmos));
                 th.start();
             break;
-            
+
             case 4:
                 th = new Thread(new ExibirPredefinidos(this, algoritmos));
                 th.start();
             break;
-            
+
             default:
             break;
+            
         }
-        th.interrupt();
         
     }
-
+    
     @FXML
     private void evtManual(ActionEvent event) {
         rdMetodo(true, false);
@@ -616,12 +630,22 @@ public class TelaPrincipalController implements Initializable {
         }
     }
 
-    @FXML
-    private void evtComoJogar(ActionEvent event) {
-    }
 
     @FXML
     private void evtSobre(ActionEvent event) {
+        try
+        {
+            Stage stage = new Stage();
+            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("TelaAbout.fxml")));
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
+        }catch(Exception er){
+            Alert a = new Alert(Alert.AlertType.ERROR, "Erro ao abrir tela sobre! " + er.getMessage(), ButtonType.OK);
+            a.showAndWait();
+        }
     }
 
     public static int getBandeira() {
@@ -656,13 +680,31 @@ public class TelaPrincipalController implements Initializable {
         rdBestFirst.setSelected(v3);
     }
     
-    public void exibirResultados(int prof, int larg, int heu)
+    public void exibirResultados(int[] vet)
     {
         Alert a = new Alert(Alert.AlertType.INFORMATION, "Busca realizada em:"
-                + "\nProfundidade (Depth First): " + prof
-                + "\nLargura (Breadth First): " + larg 
-                + "\nHeurística (Best First): " + heu, ButtonType.OK);
+                + "\nProfundidade (Depth First): " + vet[0] + " movimentos"
+                + "\nLargura (Breadth First): " + vet[1] + " movimentos"
+                + "\nHeurística (Best First): " + vet[2] + " movimentos", ButtonType.OK);
         
+        a.showAndWait();
+    }
+    
+    public void exibirBuscaProfundidade(int mov)
+    {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Busca em profundidade (Depth First) realizada em: " + mov + " movimentos.", ButtonType.OK);
+        a.showAndWait();
+    }
+    
+    public void exibirBuscaLargura(int mov)
+    {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Busca em largura (Breadth First) realizada em: " + mov + " movimentos.", ButtonType.OK);
+        a.showAndWait();
+    }
+    
+    public void exibirBuscaHeuristica(int mov)
+    {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Busca Heuristica (Best First) realizada em: " + mov + " movimentos.", ButtonType.OK);
         a.showAndWait();
     }
 }

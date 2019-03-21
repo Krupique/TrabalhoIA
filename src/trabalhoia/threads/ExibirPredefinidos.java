@@ -40,8 +40,11 @@ public class ExibirPredefinidos implements Runnable{
             System.out.println("Erro: " + er.getMessage());
         }
         tela.exibirProgress(false);
+        
+        
         Platform.runLater(() -> {
-            tela.exibirResultados(213380, 3347, 7);
+            
+            tela.exibirResultados(tela.getMovimentos(tela.getCaso));
         });
     }
     

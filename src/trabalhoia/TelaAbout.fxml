@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" fx:id="paneAbout" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #414952;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="trabalhoia.TelaAboutController">
+   <children>
+      <JFXButton fx:id="btFechar" buttonType="RAISED" layoutX="174.0" layoutY="261.0" onAction="#evtFechar" text="Fechar" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXButton>
+      <JFXTextArea fx:id="txtArea" editable="false" focusColor="#202730" layoutX="-32.0" layoutY="14.0" unFocusColor="#202730" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+   </children>
+</AnchorPane>

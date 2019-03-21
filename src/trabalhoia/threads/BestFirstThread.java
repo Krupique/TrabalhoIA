@@ -6,6 +6,7 @@
 package trabalhoia.threads;
 
 import java.util.ArrayList;
+import javafx.application.Platform;
 import trabalhoia.TelaPrincipalController;
 import trabalhoia.estrutura.Algoritmos;
 import trabalhoia.estrutura.Fila;
@@ -38,14 +39,18 @@ public class BestFirstThread implements Runnable{
         {
             System.out.println("Erro: " + er.getMessage());
         }
+        
         tela.exibirProgress(false);
         
+        Platform.runLater(() -> {
+            tela.exibirBuscaHeuristica(mov);
+        });
     }
     
     /*Best First - Busca Heurística*/
     public boolean buscaHeuristica()
     {
-        mov = 0;
+        mov = 1;
         algoritmos.setVisitados(new Estados());
         Fila fila = new Fila();
         int[] estado = algoritmos.getEstado();
@@ -56,7 +61,6 @@ public class BestFirstThread implements Runnable{
     
     public boolean bf(Fila fila) //Best First
     {
-        System.out.println("TESTE");
         if((!fila.isEmpty() && algoritmos.getVisitados().vizinhoVisitado(algoritmos.getEstado(), fila.getPrimeiroFila())))
         {
             return false;

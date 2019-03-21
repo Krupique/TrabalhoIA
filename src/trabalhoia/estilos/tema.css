@@ -9,7 +9,7 @@
     -fx-border-width: 2;
 }
 
-#panealgoritmos, #panecasosteste, #panemetodo {
+#panealgoritmos, #panecasosteste, #panemetodo{
     -fx-background-color: #414952;
     -fx-border-color: #de4726;
     -fx-border-radius: 5px;
@@ -60,4 +60,21 @@
 .context-menu
 {
     -fx-background-color: #56555B;   
+}
+
+/*Tela about*/
+#btFechar
+{
+    -fx-background-color: #ff7045;
+}
+
+
+#txtArea
+{
+    -fx-background-color: #202730;
+    -fx-prompt-text-fill: white;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 5;
+    -fx-text-alignment: justify;
 }

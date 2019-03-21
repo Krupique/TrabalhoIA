@@ -23,6 +23,8 @@ public class Main extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.setResizable(false);
+        stage.setTitle("Trabalho IA - Henrique Krupck; Rafael Eduardo");
         stage.setScene(scene);
         stage.show();
     }

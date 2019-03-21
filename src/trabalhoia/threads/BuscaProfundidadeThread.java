@@ -6,6 +6,7 @@
 package trabalhoia.threads;
 
 import java.util.ArrayList;
+import javafx.application.Platform;
 import trabalhoia.TelaPrincipalController;
 import trabalhoia.estrutura.Algoritmos;
 import trabalhoia.estrutura.Pilha;
@@ -46,7 +47,12 @@ public class BuscaProfundidadeThread implements Runnable{
         {
             System.out.println("Erro: " + er.getMessage());
         }
-            tela.exibirProgress(false);
+        
+        tela.exibirProgress(false);
+        
+        Platform.runLater(() -> {
+            tela.exibirBuscaProfundidade(mov);
+        });
     }
     
     public boolean buscaProfundidade()
@@ -99,7 +105,6 @@ public class BuscaProfundidadeThread implements Runnable{
                 }
             }
             
-            System.out.println("Chegou aqui");
             return false;
         }
         

@@ -46,11 +46,6 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Ajuda">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#evtComoJogar" text="Como Jogar">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#evtSobre" text="Sobre" />
             </items>
           </Menu>
@@ -171,7 +166,7 @@
                   </JFXRadioButton>
                </children>
             </AnchorPane>
-            <JFXButton fx:id="btBuscarSolucao" buttonType="RAISED" layoutX="118.0" layoutY="468.0" onAction="#evtBuscarSolucao" prefHeight="30.0" prefWidth="110.0" text="Buscar Solução" textFill="WHITE" AnchorPane.topAnchor="465.0">
+            <JFXButton fx:id="btBuscarSolucao" buttonType="RAISED" layoutX="118.0" layoutY="468.0" onAction="#evtBuscarSolucao" prefHeight="30.0" prefWidth="130.0" text="Buscar Solução" textFill="WHITE" AnchorPane.topAnchor="465.0">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

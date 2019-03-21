@@ -6,6 +6,7 @@
 package trabalhoia.threads;
 
 import java.util.ArrayList;
+import javafx.application.Platform;
 import trabalhoia.TelaPrincipalController;
 import trabalhoia.estrutura.Algoritmos;
 import trabalhoia.estrutura.Fila;
@@ -40,6 +41,9 @@ public class BuscaLarguraThread implements Runnable{
         }
         tela.exibirProgress(false);
         
+        Platform.runLater(() -> {
+            tela.exibirBuscaLargura(mov);
+        });
     }
     
     
@@ -49,10 +53,10 @@ public class BuscaLarguraThread implements Runnable{
             Descrição. 
         */
         
+        mov = 1;
         algoritmos.setVisitados(new Estados());
         Fila fila = new Fila();
         int[] estado = algoritmos.getEstado();
-        mov = 0;
         boolean res = bfs(fila);
         
         algoritmos.setEstado(estado);
@@ -63,7 +67,6 @@ public class BuscaLarguraThread implements Runnable{
     /*Breadth-First Search*/
     public boolean bfs(Fila fila)
     {
-        System.out.println("breadth first: " + fila.getTL());
         if((!fila.isEmpty() && algoritmos.getVisitados().vizinhoVisitado(algoritmos.getEstado(), fila.getPrimeiroFila())))
         {
             return false;
